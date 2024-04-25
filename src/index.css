@@ -46,6 +46,10 @@ p {
   flex-direction: row !important;
 }
 
+.MuiStack-root .css-5rcoci-MuiStack-root {
+  width: 100% !important;
+}
+
 .css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   padding-left: 32px !important;
   padding-right: 14px !important;
@@ -86,5 +90,5 @@ p {
 }
 
 .datePicker input {
-padding: 8.5px 0;
+  padding: 8.5px 0;
 }

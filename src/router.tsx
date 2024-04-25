@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import IdentityForm from "./screens/IdentityForm/IdentityForm";
 import Home from "./screens/Home/Home";
+import NotFound404 from "./screens/404/NotFound404";
 
 const router = createBrowserRouter(
   [
@@ -19,6 +20,10 @@ const router = createBrowserRouter(
           element: <IdentityForm />,
         },
       ],
+    },
+    {
+      path: "*",
+      element: <NotFound404 />,
     },
   ],
 

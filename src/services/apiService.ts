@@ -1,13 +1,41 @@
 import axios from "axios";
+import { ISelectData } from "../models/IdentityForm";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
+
+// get governorates data from api
+export async function getGovernorate(): Promise<ISelectData> {
+  try {
+    const response = await axios.get<ISelectData>(`${baseURL}/Governorates`);
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching governorates:", error);
+    return { error: true } as ISelectData
+  }
+}
+
+// get cites data from api
+export async function getCities(governorateId: number): Promise<ISelectData> {
+  try {
+    const response = await axios.get<ISelectData>(`${baseURL}/Governorates/${governorateId}`);
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching cities:", error);
+    return { error: true } as ISelectData
+  }
+}
+
+
+// upload attachment
 export const uploadFile = async (file: File) => {
   try {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await axios.post(`${baseURL}/upload`, formData, {
+    const response = await axios.post(`${baseURL}/MartyrIdForms/Attachment`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -20,7 +48,7 @@ export const uploadFile = async (file: File) => {
 
     // Return the response data (which may contain the attachment ID)
     return response.data;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     let errorMessage = "An error occurred while uploading the file.";
 

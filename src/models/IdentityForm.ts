@@ -40,7 +40,6 @@ export enum MartyrRelation {
     Sister = 5
 }
 
-
 export interface Address {
     governorateId: number | null;
     cityId: number | null;
@@ -51,8 +50,9 @@ export interface Address {
 }
 
 export interface Attachment {
-    attachmentId: number | null;
     type: number | null;
+    attachmentId: number | null;
+    url?: string | null;
 }
 
 export interface IdentityFormValues {
@@ -61,19 +61,19 @@ export interface IdentityFormValues {
     thirdName: string;
     fourthName: string;
     surName: string;
-    maritalStatus: number | null;
-    wivesCount: number | null;
-    maleChildCount: number | null;
-    femaleChildCount: number | null;
+    maritalStatus: number | undefined;
+    wivesCount: number | undefined;
+    maleChildCount: number | undefined;
+    femaleChildCount: number | undefined;
     pensionNumber: string;
     isFatherAlive: boolean | null;
     isMotherAlive: boolean | null;
     beneficiaryName: string;
     relation: number | null;
     birthDate: Date | string;
-    martyrsCount: number | null;
-    brothersCount: number | null;
-    sistersCount: number | null;
+    martyrsCount: number | undefined;
+    brothersCount: number | undefined;
+    sistersCount: number | undefined;
     phoneNumber: string;
     address: Address;
     stage: number | null;
@@ -83,3 +83,31 @@ export interface IdentityFormValues {
     attachments: Attachment[];
 }
 
+// select options data
+export interface IOptionData {
+    id: number;
+    name: string;
+    cities: null | []
+}
+
+export interface ISelectData {
+    data: IOptionData[]
+
+    error: boolean,
+    message: string | null,
+    details: string | null,
+    totalCount: number
+}
+
+export interface IUploadAttachmentResData {
+    givenName: string
+    id: number
+    url: string
+}
+export interface IUploadAttachmentRes {
+    data: IUploadAttachmentResData
+    error: boolean,
+    message: string | null,
+    details: string | null,
+    totalCount: number
+}

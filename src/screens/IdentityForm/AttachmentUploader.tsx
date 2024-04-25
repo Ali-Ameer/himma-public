@@ -1,67 +1,120 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { Button, Card, IconButton } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Button, Card, CircularProgress, IconButton } from "@mui/material";
 import { CloudArrowUpIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { uploadFile } from "../../services/apiService";
+import {
+  Attachment,
+  AttachmentType,
+  IUploadAttachmentRes,
+} from "../../models/IdentityForm";
 
-const AttachmentUploader = () => {
+interface Props {
+  attachmentsList: Attachment[];
+  pensionNumber: number | string;
+  handleChange: (newValue: Attachment[]) => void;
+}
+
+const attachmentCards = {
+  attachment1: {
+    type: AttachmentType.IdCard,
+    name: "الموحدة: الجهة الامامية",
+    url: null,
+    attachmentId: null,
+  },
+  attachment2: {
+    type: AttachmentType.IdCard,
+    name: "الموحدة: الجهة الخلفية",
+    url: null,
+    attachmentId: null,
+  },
+  attachment3: {
+    type: AttachmentType.ResidenceCard,
+    name: "بطاقة السكن: الجهة الخلفية",
+    url: null,
+    attachmentId: null,
+  },
+  attachment4: {
+    type: AttachmentType.ResidenceCard,
+    name: "بطاقة السكن: الجهة الخلفية",
+    url: null,
+    attachmentId: null,
+  },
+  attachment5: {
+    type: AttachmentType.PensionCard,
+    name: "هوية التقاعد: الجهة الخلفية",
+    url: null,
+    attachmentId: null,
+  },
+  attachment6: {
+    type: AttachmentType.PensionCard,
+    name: "هوية التقاعد: الجهة الخلفية",
+    url: null,
+    attachmentId: null,
+  },
+  attachment7: {
+    type: AttachmentType.MartyrCertificate,
+    name: "تأييد استشهاد",
+    url: null,
+    attachmentId: null,
+  },
+};
+const AttachmentUploader = ({
+  attachmentsList,
+  pensionNumber,
+  handleChange,
+}: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [attachments, setAttachments] = useState<{
     [key: string]: {
+      type: number;
       name: string | null;
       url: string | null;
-      attachmentId: string | null;
+      attachmentId: number | null;
     };
-  }>({
-    attachment1: {
-      name: "الموحدة: الجهة الامامية",
-      url: null,
-      attachmentId: null,
-    },
-    attachment2: {
-      name: "الموحدة: الجهة الخلفية",
-      url: null,
-      attachmentId: null,
-    },
-    attachment3: {
-      name: "بطاقة السكن: الجهة الخلفية",
-      url: null,
-      attachmentId: null,
-    },
-    attachment4: {
-      name: "بطاقة السكن: الجهة الخلفية",
-      url: null,
-      attachmentId: null,
-    },
-    attachment5: {
-      name: "هوية التقاعد: الجهة الخلفية",
-      url: null,
-      attachmentId: null,
-    },
-    attachment6: {
-      name: "هوية التقاعد: الجهة الخلفية",
-      url: null,
-      attachmentId: null,
-    },
-    attachment7: {
-      name: "تأييد استشهاد",
-      url: null,
-      attachmentId: null,
-    },
-    attachment8: {
-      name: "تأييد استشهاد من الادارة المركزية",
-      url: null,
-      attachmentId: null,
-    },
-  });
+  }>(attachmentCards);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, attachmentType: string) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    attachmentType: string,
+    typeNumber: number
+  ) => {
+    setIsLoading(true);
+
     const file = event.target.files?.[0];
     if (file) {
-      // Simulate API upload and get attachmentId
-      const attachmentId = "mock-attachment-id";
-      setAttachments({
-        ...attachments,
-        [attachmentType]: {...attachments[attachmentType], url: URL.createObjectURL(file), attachmentId },
-      });
+      // upload to api
+      await uploadFile(file)
+        .then((res: IUploadAttachmentRes) => {
+          const attachmentId = res?.data?.id;
+
+          // update the view
+          setAttachments({
+            ...attachments,
+            [attachmentType]: {
+              ...attachments[attachmentType],
+              url: URL.createObjectURL(file),
+              attachmentId,
+            },
+          });
+
+          // update formik value
+          const attachmentResult = [
+            ...attachmentsList,
+            {
+              type: typeNumber,
+              attachmentId: attachmentId,
+              url: res?.data?.url || URL.createObjectURL(file),
+            },
+          ];
+
+          handleChange(attachmentResult);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
     }
   };
 
@@ -76,6 +129,27 @@ const AttachmentUploader = () => {
     });
   };
 
+  // filter attachments
+  useEffect(() => {
+    if (
+      !pensionNumber?.toString().startsWith("74") &&
+      !pensionNumber?.toString().startsWith("23")
+    ) {
+      setAttachments({
+        ...attachments,
+        attachment8: {
+          type: AttachmentType.CentralMartyrCertificate,
+          name: "تأييد استشهاد من الادارة المركزية",
+          url: null,
+          attachmentId: null,
+        },
+      });
+    } else {
+      setAttachments(attachmentCards);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pensionNumber]);
+
   return (
     <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
       {Object.keys(attachments).map((attachmentType) => (
@@ -88,23 +162,40 @@ const AttachmentUploader = () => {
             {attachments[attachmentType].name}
           </p>
 
-          {!attachments[attachmentType].url && (
-            <Button
-              component="label"
-              role={undefined}
-              variant="outlined"
-              color="success"
-              tabIndex={-1}
-              startIcon={<CloudArrowUpIcon className="h-6 w-6 text-[#2e7d32]" />}
-              onChange={(event: any) => handleFileChange(event, attachmentType)}
-              id={`attachment-input-${attachmentType}`}
-              className="gap-2"
-              sx={{marginX: "8px", marginBottom: 1}}
-            >
-              اضافة
-              <input type="file" accept="image/*" style={{ display: "none" }} />
-            </Button>
-          )}
+          {!attachments[attachmentType].url &&
+            (isLoading ? (
+              <div className="flex justify-center py-1">
+                <CircularProgress color="success" size={30} />
+              </div>
+            ) : (
+              <Button
+                component="label"
+                role={undefined}
+                variant="outlined"
+                color="success"
+                tabIndex={-1}
+                startIcon={
+                  <CloudArrowUpIcon className="h-6 w-6 text-[#2e7d32]" />
+                }
+                onChange={(event: any) =>
+                  handleFileChange(
+                    event,
+                    attachmentType,
+                    attachments[attachmentType].type
+                  )
+                }
+                id={`attachment-input-${attachmentType}`}
+                className="gap-2"
+                sx={{ marginX: "8px", marginBottom: 1 }}
+              >
+                اضافة
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                />
+              </Button>
+            ))}
 
           {attachments[attachmentType].url && (
             <div className="w-full flex flex-col gap-4 justify-center items-center">

@@ -1,17 +1,14 @@
-import { TextField as MuiInput } from "@mui/material";
-import { useField } from "formik";
+import { FormHelperText, TextField as MuiInput } from "@mui/material";
 
 const TextField = ({ ...props }) => {
-  const [field, meta] = useField(props.name);
-
   return (
     <>
       <MuiInput
-        {...field}
         {...props}
         label={props.label}
-        error={meta.touched && Boolean(meta.error)}
-        helperText={meta.touched && meta.error ? meta.error : ""}
+        error={Boolean(props.error)}
+        onTouchEnd={props?.touched}
+        helperText={props.error ? props.helperText : null}
         size={props.size || "small"}
         sx={{
           "& label": {
@@ -29,6 +26,11 @@ const TextField = ({ ...props }) => {
           },
         }}
       />
+      {props.touched && props.error && (
+        <FormHelperText className="px-0 pt-1">
+          <p className="errMsg">{props.error}</p>
+        </FormHelperText>
+      )}
     </>
   );
 };
