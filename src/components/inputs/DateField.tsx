@@ -2,10 +2,10 @@ import { Box, FormHelperText } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
-// import customParseFormat from "dayjs/plugin/customParseFormat";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DateFormat } from "../../models/IdentityForm";
 
-// dayjs.extend(customParseFormat);
+dayjs.extend(customParseFormat);
 
 const DateFiled = ({ ...props }) => {
   return (

@@ -12,10 +12,10 @@ export default function OurServices() {
         id="services"
       >
         <div className="w-100 nav flex flex-col gap-4 items-center">
-          <p className="flex items-center gap-2 text-xl/3 font-semibold text-yellow-500">
+          <div className="flex items-center gap-2 ">
             <div className="h-[1.5px] w-5 bg-white rounded" />
-            خدماتنا
-          </p>
+            <p className="text-xl/3 font-semibold text-yellow-500">خدماتنا</p>
+          </div>
 
           <h2 className="text-2xl sm:text-4xl font-bold text-white ">
             الخدمات الالكترونية
