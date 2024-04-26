@@ -8,8 +8,7 @@ export enum AttachmentType {
     Photo = 3,
     PensionCard = 4,
     MartyrCertificate = 5,
-    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
-    CentralMartyrCertificate = 5,
+    CentralMartyrCertificate = 6,
 }
 
 export enum FormStatus {
@@ -55,6 +54,7 @@ export interface Attachment {
     url?: string | null;
 }
 
+// form values
 export interface IdentityFormValues {
     firstName: string;
     secondName: string;
@@ -62,7 +62,7 @@ export interface IdentityFormValues {
     fourthName: string;
     surName: string;
     maritalStatus: number | undefined;
-    wivesCount: number | undefined;
+    wivesCount: number | null;
     maleChildCount: number | undefined;
     femaleChildCount: number | undefined;
     pensionNumber: string;

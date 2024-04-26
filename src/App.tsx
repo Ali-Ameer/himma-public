@@ -4,6 +4,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createTheme, ThemeProvider } from "@mui/material";
 import * as locales from "@mui/material/locale";
+import Footer from "./components/footer/Footer";
 
 function App() {
   const theme = createTheme(
@@ -31,6 +32,7 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"arSA"}>
         <Navbar />
         <Outlet />
+        <Footer />
       </LocalizationProvider>
     </ThemeProvider>
   );

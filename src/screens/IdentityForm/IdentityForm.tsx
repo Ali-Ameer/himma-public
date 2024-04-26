@@ -1,14 +1,15 @@
 import {
+  Alert,
   Button,
   FormControl,
   FormHelperText,
   InputLabel,
   MenuItem,
   Select,
+  Snackbar,
 } from "@mui/material";
 import { useFormik } from "formik";
 
-import * as yup from "yup";
 import {
   IdentityFormValues,
   IOptionData,
@@ -21,107 +22,48 @@ import TextField from "../../components/inputs/TextField";
 import DateField from "../../components/inputs/DateField";
 import Card from "../../components/card/Card";
 import { useEffect, useState } from "react";
-import { getGovernorate } from "../../services/apiService";
+import { getGovernorate, SaveForm } from "../../services/apiService";
 import PersonImage from "./PersonImage";
-
-const eighteenYearsAgo = new Date(
-  new Date().getFullYear() - 18,
-  new Date().getMonth(),
-  new Date().getDate()
-);
+import useIdentityForm from "./useIdentityForm";
 
 const IdentityForm = () => {
+  const {
+    initialValues,
+    validationSchema,
+    eighteenYearsAgo,
+    openAlert,
+    setOpenAlert,
+    alertType,
+    setAlertType,
+    handleAlertClose,
+  } = useIdentityForm();
+
   const [governorate, setGovernorate] = useState<ISelectData>();
   const [cities, setCities] = useState<ISelectData>();
 
-  const initialValues: IdentityFormValues = {
-    firstName: "",
-    secondName: "",
-    thirdName: "",
-    fourthName: "",
-    surName: "",
-    maritalStatus: undefined,
-    wivesCount: undefined,
-    maleChildCount: undefined,
-    femaleChildCount: undefined,
-    pensionNumber: "",
-    isFatherAlive: null,
-    isMotherAlive: null,
-    beneficiaryName: "",
-    relation: null,
-    birthDate: eighteenYearsAgo,
-    martyrsCount: undefined,
-    brothersCount: undefined,
-    sistersCount: undefined,
-    phoneNumber: "",
-    address: {
-      governorateId: null,
-      cityId: null,
-      neighborhood: "",
-      alley: "",
-      houseNumber: "",
-      nearestLocation: "",
-    },
-    stage: null,
-    schoolName: "",
-    studyType: "",
-    isStudying: null,
-    attachments: [],
-  };
+  const handleSubmit = async (values: IdentityFormValues) => {
+    await SaveForm(values)
+      .then((res) => {
+        console.log("result", res);
 
-  const validationSchema = yup.object({
-    firstName: yup.string().required("الاسم الأول مطلوب"),
-    secondName: yup.string().required("الاسم الثاني مطلوب"),
-    thirdName: yup.string().required("الاسم الثالث مطلوب"),
-    fourthName: yup.string().required("الاسم الرابع مطلوب"),
-    surName: yup.string().required("اللقب مطلوب"),
-    maritalStatus: yup.number().required("الحالة الاجتماعية مطلوبة"),
-    wivesCount: yup.number().required("عدد الزوجات مطلوب"),
-    maleChildCount: yup.number().required("عدد الأبناء الذكور مطلوب"),
-    femaleChildCount: yup.number().required("عدد الأبناء الإناث مطلوب"),
-    pensionNumber: yup.string().required("رقم التقاعد مطلوب"),
-    isFatherAlive: yup.boolean().required("يرجى الاختيار من القائمة"),
-    isMotherAlive: yup.boolean().required("يرجى الاختيار من القائمة"),
-    beneficiaryName: yup.string().required("اسم المستفيد مطلوب"),
-    relation: yup.number().required("العلاقة مطلوبة"),
-    birthDate: yup.date().required("تاريخ الميلاد مطلوب"),
-    martyrsCount: yup.number().required("عدد الشهداء مطلوب"),
-    brothersCount: yup.number().required("عدد الإخوة مطلوب"),
-    sistersCount: yup.number().required("عدد الأخوات مطلوب"),
-    phoneNumber: yup
-      .string()
-      .min(11, "ادخل رقم صحيح")
-      .max(11, "ادخل رقم صحيح")
-      .required("رقم الهاتف مطلوب"),
-    address: yup.object().shape({
-      governorateId: yup.number().required("محافظة السكن مطلوبة"),
-      cityId: yup.number().required("مدينة السكن مطلوبة"),
-      neighborhood: yup.string().required("الحي مطلوب"),
-      alley: yup.string().required("الزقاق مطلوب"),
-      houseNumber: yup.string().required("رقم المنزل مطلوب"),
-      nearestLocation: yup.string().required("الموقع الأقرب مطلوب"),
-    }),
-    stage: yup.number().required("المرحلة مطلوبة"),
-    schoolName: yup.string().required("اسم المدرسة مطلوب"),
-    studyType: yup.string().required("نوع الدراسة مطلوب"),
-    isStudying: yup.boolean().required("هل يدرس؟ مطلوب"),
-    attachments: yup.array().of(
-      yup.object().shape({
-        attachmentId: yup.number().required("رقم المرفق مطلوب"),
-        type: yup.number().required("نوع المرفق مطلوب"),
+        setOpenAlert(true);
+        setAlertType({ type: "success", msg: "تم تقديم الاستمارة بنجاح" });
+
+        // formik.resetForm();
       })
-    ),
-  });
+      .catch((err) => {
+        console.log(err?.message);
 
-  const handleSubmit = () => {
-    console.log(formik.values);
-    formik.resetForm();
+        setAlertType({ type: "error", msg: err?.message || "حدث خطا ما!" });
+        setOpenAlert(true);
+
+      });
   };
 
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: handleSubmit,
+    onSubmit: (values) => handleSubmit(values),
   });
 
   // get data when is loading
@@ -155,8 +97,14 @@ const IdentityForm = () => {
     }
   }, [formik.values.address.governorateId]);
 
-  console.log(formik.values);
-
+  // set wife count to 0 if not married
+  useEffect(() => {
+    if (formik.values.maritalStatus !== MaritalStatus.Married) {
+      formik.setFieldValue("wivesCount", 0);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formik.values.maritalStatus]);
+  
   return (
     <article className="max-w-3xl mx-auto p-4">
       <h1 className="title mb-8">استمارة هوية ذوي الشهداء</h1>
@@ -264,24 +212,28 @@ const IdentityForm = () => {
             </FormHelperText>
           </FormControl>
 
-          <TextField
-            id="wivesCount"
-            name="wivesCount"
-            label="عدد الزوجات"
-            value={formik.values.wivesCount}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.wivesCount && Boolean(formik.errors?.wivesCount)
-            }
-            helperText={formik.errors?.wivesCount}
-            fullWidth
-          />
+          {formik.values.maritalStatus === MaritalStatus.Married && (
+            <TextField
+              id="wivesCount"
+              name="wivesCount"
+              label="عدد الزوجات"
+              type="number"
+              value={formik.values.wivesCount}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.wivesCount && Boolean(formik.errors?.wivesCount)
+              }
+              helperText={formik.errors?.wivesCount}
+              fullWidth
+            />
+          )}
 
           <TextField
             id="maleChildCount"
             name="maleChildCount"
             label="عدد الأبناء الذكور"
+            type="number"
             value={formik.values.maleChildCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -298,6 +250,7 @@ const IdentityForm = () => {
             name="femaleChildCount"
             label="عدد الأبناء الإناث"
             value={formik.values.femaleChildCount}
+            type="number"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -438,6 +391,7 @@ const IdentityForm = () => {
             id="martyrsCount"
             name="martyrsCount"
             label="عدد الشهداء"
+            type="number"
             value={formik.values.martyrsCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -447,13 +401,13 @@ const IdentityForm = () => {
             }
             helperText={formik.errors?.martyrsCount}
             fullWidth
-            type="number"
           />
 
           <TextField
             id="brothersCount"
             name="brothersCount"
             label="عدد الإخوة"
+            type="number"
             value={formik.values.brothersCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -463,13 +417,13 @@ const IdentityForm = () => {
             }
             helperText={formik.errors?.brothersCount}
             fullWidth
-            type="number"
           />
 
           <TextField
             id="sistersCount"
             name="sistersCount"
             label="عدد الأخوات"
+            type="number"
             value={formik.values.sistersCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -479,7 +433,6 @@ const IdentityForm = () => {
             }
             helperText={formik.errors?.sistersCount}
             fullWidth
-            type="number"
           />
 
           <TextField
@@ -564,7 +517,7 @@ const IdentityForm = () => {
               formik.touched.address?.nearestLocation &&
               Boolean(formik.errors?.address?.nearestLocation)
             }
-            helperText={formik.errors?.nearestLocation}
+            helperText={formik.errors?.address?.nearestLocation}
             fullWidth
           />
 
@@ -626,13 +579,13 @@ const IdentityForm = () => {
               id="stage"
               name="stage"
               label="المرحلة الدراسية"
-              value={formik.values.stage || ""}
+              value={formik.values?.stage ?? ""}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.touched.stage && Boolean(formik.errors?.stage)}
             >
-              <MenuItem value={0}>ماجستير</MenuItem>
-              <MenuItem value={1}>متوسطة</MenuItem>
+              <MenuItem value={1}>ماجستير</MenuItem>
+              <MenuItem value={2}>متوسطة</MenuItem>
             </Select>
 
             <FormHelperText component="div">
@@ -708,6 +661,10 @@ const IdentityForm = () => {
               formik.setFieldValue("attachments", newValue)
             }
           />
+
+          {formik?.errors?.attachments && (
+            <p className="errMsg">{String(formik?.errors?.attachments)}</p>
+          )}
         </Card>
       </div>
 
@@ -724,6 +681,22 @@ const IdentityForm = () => {
           إرسال
         </Button>
       </div>
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertType.type}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertType.msg}
+        </Alert>
+      </Snackbar>
     </article>
   );
 };

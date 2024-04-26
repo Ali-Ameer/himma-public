@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Cairo Variable", sans-serif;
 }
@@ -91,4 +95,15 @@ p {
 
 .datePicker input {
   padding: 8.5px 0;
+}
+
+.css-1ytlwq5-MuiAlert-icon {
+  margin-left: 12px;
+  margin-right: 0 !important;
+}
+
+.css-ki1hdl-MuiAlert-action {
+  padding: 4px 16px 0px 0 !important;
+  margin-right: auto !important;
+  margin-left: -8px !important;
 }

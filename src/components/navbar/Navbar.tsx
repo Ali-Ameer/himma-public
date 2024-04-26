@@ -1,16 +1,27 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const navigation = [
   { name: "الرئيسية", href: "/" },
-  { name: "الاستمارة", href: "IdentityForm" },
+  { name: "الخدمات", href: "/#services" },
+  { name: "استمارة ذوي الشهداء", href: "IdentityForm" },
 ];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleClick = (href: string) => {
+    if (href === "/#services") {
+      const element = document.getElementById("services");
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+    setMobileMenuOpen(false);
+  };
   return (
     <header className="relative z-50">
       <nav
@@ -20,11 +31,11 @@ export default function Navbar() {
         <div className="flex lg:flex-1">
           <Link to="/" className="flex gap-4 items-center -m-1.5 p-1.5">
             <img
-              className="h-12 w-auto"
+              className="h-12 w-auto p-1 bg-yellow-500 rounded-full"
               src="/src/assets/images/logo.png"
               alt=""
             />
-            <h3 className="text-lg font-semibold">الحشد الشعبي</h3>
+            <h3 className="text-xl font-bold text-zinc-800">حِمى</h3>
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -39,21 +50,27 @@ export default function Navbar() {
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <Link
+            <NavLink
               key={item.name}
               to={item.href}
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-lg font-semibold leading-6 text-slate-800 transition-colors pb-1 border-b-2 border-transparent hover:text-teal-600 hover:border-teal-600 "
+              style={({ isActive }) =>
+                isActive && item?.href !== navigation[1].href
+                  ? { color: "#0d9488", borderColor: "#0d9488" }
+                  : {}
+              }
+              onClick={() => handleClick(item.href)}
             >
               {item.name}
-            </Link>
+            </NavLink>
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
             to="IdentityForm"
-            className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+            className="rounded-md bg-teal-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
           >
-            التقديم الان
+            استمارة ذوي الشهداء
           </Link>
         </div>
       </nav>
@@ -85,23 +102,24 @@ export default function Navbar() {
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
+              <div className="flex flex-col gap-4 space-y-2 py-6">
                 {navigation.map((item) => (
-                  <Link
+                  <NavLink
                     key={item.name}
                     to={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    className="block text-lg font-semibold leading-6 text-slate-800 transition-colors pb-1 border-b-2 border-transparent hover:text-teal-600 hover:border-teal-600 "
+                    onClick={() => handleClick(item.href)}
                   >
                     {item.name}
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
               <div className="py-6">
                 <Link
                   to={"IdentityForm"}
-                  className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                  className="rounded-md bg-teal-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
                 >
-                  التقديم الان
+                  استمارة ذوي الشهداء
                 </Link>
               </div>
             </div>
