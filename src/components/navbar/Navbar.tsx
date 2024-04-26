@@ -2,6 +2,7 @@ import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, NavLink } from "react-router-dom";
+import logo from "/src/assets/images/logo.png"
 
 const navigation = [
   { name: "الرئيسية", href: "/" },
@@ -32,8 +33,8 @@ export default function Navbar() {
           <Link to="/" className="flex gap-4 items-center -m-1.5 p-1.5">
             <img
               className="h-12 w-auto p-1 bg-yellow-500 rounded-full"
-              src="../../assets/images/logo.png"
-              alt=""
+              src={logo}
+              alt="logo"
             />
             <h3 className="text-xl font-bold text-zinc-800">حِمى</h3>
           </Link>
