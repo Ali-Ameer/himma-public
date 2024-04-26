@@ -147,7 +147,7 @@ const AttachmentUploader = ({
     } else {
       setAttachments(attachmentCards);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pensionNumber]);
 
   return (
@@ -200,7 +200,7 @@ const AttachmentUploader = ({
           {attachments[attachmentType].url && (
             <div className="w-full flex flex-col gap-4 justify-center items-center">
               <img
-                src={attachments[attachmentType].url}
+                src={attachments[attachmentType]?.url || ""}
                 alt={`Attachment ${attachmentType}`}
                 className="max-w-100 h-100 max-h-20 object-cover shadow-md rounded-md "
               />
