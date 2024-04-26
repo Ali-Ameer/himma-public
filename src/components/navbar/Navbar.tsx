@@ -32,7 +32,7 @@ export default function Navbar() {
           <Link to="/" className="flex gap-4 items-center -m-1.5 p-1.5">
             <img
               className="h-12 w-auto p-1 bg-yellow-500 rounded-full"
-              src="/src/assets/images/logo.png"
+              src="../../assets/images/logo.png"
               alt=""
             />
             <h3 className="text-xl font-bold text-zinc-800">حِمى</h3>
