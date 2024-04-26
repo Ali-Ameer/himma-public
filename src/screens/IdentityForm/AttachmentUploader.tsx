@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Button, Card, CircularProgress, IconButton } from "@mui/material";
 import { CloudArrowUpIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -19,43 +18,43 @@ const attachmentCards = {
   attachment1: {
     type: AttachmentType.IdCard,
     name: "الموحدة: الجهة الامامية",
-    url: null,
+    url: undefined,
     attachmentId: null,
   },
   attachment2: {
     type: AttachmentType.IdCard,
     name: "الموحدة: الجهة الخلفية",
-    url: null,
+    url: undefined,
     attachmentId: null,
   },
   attachment3: {
     type: AttachmentType.ResidenceCard,
     name: "بطاقة السكن: الجهة الخلفية",
-    url: null,
+    url: undefined,
     attachmentId: null,
   },
   attachment4: {
     type: AttachmentType.ResidenceCard,
     name: "بطاقة السكن: الجهة الخلفية",
-    url: null,
+    url: undefined,
     attachmentId: null,
   },
   attachment5: {
     type: AttachmentType.PensionCard,
     name: "هوية التقاعد: الجهة الخلفية",
-    url: null,
+    url: undefined,
     attachmentId: null,
   },
   attachment6: {
     type: AttachmentType.PensionCard,
     name: "هوية التقاعد: الجهة الخلفية",
-    url: null,
+    url: undefined,
     attachmentId: null,
   },
   attachment7: {
     type: AttachmentType.MartyrCertificate,
     name: "تأييد استشهاد",
-    url: null,
+    url: undefined,
     attachmentId: null,
   },
 };
@@ -69,7 +68,7 @@ const AttachmentUploader = ({
     [key: string]: {
       type: number;
       name: string | null;
-      url: string | null;
+      url: string | undefined;
       attachmentId: number | null;
     };
   }>(attachmentCards);
@@ -123,7 +122,7 @@ const AttachmentUploader = ({
       ...attachments,
       [attachmentType]: {
         ...attachments[attachmentType],
-        url: null,
+        url: "",
         attachmentId: null,
       },
     });
@@ -140,7 +139,7 @@ const AttachmentUploader = ({
         attachment8: {
           type: AttachmentType.CentralMartyrCertificate,
           name: "تأييد استشهاد من الادارة المركزية",
-          url: null,
+          url: "",
           attachmentId: null,
         },
       });
@@ -159,10 +158,10 @@ const AttachmentUploader = ({
           className="flex flex-col justify-between gap-2 p-2 bg-white shadow"
         >
           <p className="w-full text-sm text-slate-700 font-normal border-b border-gray-300 pb-1 px-2">
-            {attachments[attachmentType].name}
+            {attachments[attachmentType]?.name}
           </p>
 
-          {!attachments[attachmentType].url &&
+          {!attachments[attachmentType]?.url &&
             (isLoading ? (
               <div className="flex justify-center py-1">
                 <CircularProgress color="success" size={30} />
@@ -177,6 +176,7 @@ const AttachmentUploader = ({
                 startIcon={
                   <CloudArrowUpIcon className="h-6 w-6 text-[#2e7d32]" />
                 }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onChange={(event: any) =>
                   handleFileChange(
                     event,
