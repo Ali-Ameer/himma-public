@@ -171,10 +171,10 @@ const AttachmentUploader = ({
                 component="label"
                 role={undefined}
                 variant="outlined"
-                color="success"
+                color="primary"
                 tabIndex={-1}
                 startIcon={
-                  <CloudArrowUpIcon className="h-6 w-6 text-[#2e7d32]" />
+                  <CloudArrowUpIcon className="h-6 w-6 text-[#0d9488]" />
                 }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onChange={(event: any) =>

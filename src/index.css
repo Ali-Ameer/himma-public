@@ -33,77 +33,12 @@ p {
   text-align: right;
 }
 
-.MuiPickersCalendarHeader-root,
-.css-1aqny2q-MuiPickersCalendarHeader-root {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-}
-
-.MuiPickersCalendarHeader-labelContainer,
-.css-cyfsxc-MuiPickersCalendarHeader-labelContainer {
-  margin: 0 !important;
-}
-
-.MuiPickersArrowSwitcher-root,
-.css-9reuh9-MuiPickersArrowSwitcher-root {
-  flex-direction: row !important;
-}
-
-.MuiStack-root .css-5rcoci-MuiStack-root {
-  width: 100% !important;
-}
-
-.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  padding-left: 32px !important;
-  padding-right: 14px !important;
-}
-
-.css-11l30dm-MuiSvgIcon-root-MuiSelect-icon,
-.css-6r42io-MuiSvgIcon-root-MuiSelect-icon {
-  left: 7px !important;
-  right: auto !important;
-}
-
-.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-  text-align: right !important;
-}
-
-.css-q4gmb2-MuiFormHelperText-root {
-  text-align: right !important;
-}
-
-.selectInput .css-iss0c4-MuiFormLabel-root-MuiInputLabel-root {
-  transform-origin: top left;
-  right: 0;
-  left: auto !important;
-  transform: translate(-14px, 9px) scale(1) !important;
-  -webkit-transform: translate(-14px, 9px) scale(1) !important;
-  -moz-transform: translate(-14px, 9px) scale(1) !important;
-  -ms-transform: translate(-14px, 9px) scale(1) !important;
-}
-
-.selectInput .css-95xlhw-MuiFormLabel-root-MuiInputLabel-root {
-  transform-origin: top right !important;
-  right: 0 !important;
-  left: auto !important;
-  transform: translate(-14px, -9px) scale(0.75) !important;
-  -webkit-transform: translate(-14px, -9px) scale(0.75) !important;
-  -moz-transform: translate(-14px, -9px) scale(0.75) !important;
-  -ms-transform: translate(-14px, -9px) scale(0.75) !important;
-}
 
 .datePicker input {
-  padding: 8.5px 0;
+  padding: 8.5px 14px;
 }
 
-.css-1ytlwq5-MuiAlert-icon {
-  margin-left: 12px;
-  margin-right: 0 !important;
-}
-
-.css-ki1hdl-MuiAlert-action {
-  padding: 4px 16px 0px 0 !important;
-  margin-right: auto !important;
-  margin-left: -8px !important;
+.MuiStack-root.mui-style-rtl-5rcoci-MuiStack-root {
+  width: 100%;
+  min-width: 100%;
 }

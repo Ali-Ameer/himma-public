@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ChangeEvent, ReactNode } from "react";
+
 export enum DateFormat {
     default = "DD/MM/YYYY",
 }
@@ -110,4 +113,25 @@ export interface IUploadAttachmentRes {
     message: string | null,
     details: string | null,
     totalCount: number
+}
+
+// input
+
+export interface IInputProps {
+    children?: ReactNode
+    label: string;
+    id?: string;
+    name: string;
+    type?: string;
+    value: any;
+    placeholder?: string;
+    onChange?: (e?: ChangeEvent<any>) => void;
+    setFieldValue?: (e?: ChangeEvent<any>) => void;
+    onBlur?: (e?: any) => void;
+    error: string | boolean | undefined
+    touched: boolean | undefined
+    disabled?: boolean;
+
+    maxDate?: Date
+    minDate?: Date
 }

@@ -53,7 +53,7 @@ import {
           </div>
   
           {/* cta */}
-          <div className="mt-10 flex items-center justify-center gap-x-6">
+          <div className="mt-10 flex items-center justify-center gap-x-4">
             <Link
               to={"/#services"}
               className="w-32 flex items-center gap-1 text-sm/6 font-semibold text-zinc-800 border-b border-zinc-800 transition-all hover:text-zinc-900 hover:border-none hover:gap-2 hover:transition-all"

@@ -1,13 +1,4 @@
-import {
-  Alert,
-  Button,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  Snackbar,
-} from "@mui/material";
+import { Alert, Button, MenuItem, Snackbar } from "@mui/material";
 import { useFormik } from "formik";
 
 import {
@@ -20,6 +11,7 @@ import {
 import AttachmentUploader from "./AttachmentUploader";
 import TextField from "../../components/inputs/TextField";
 import DateField from "../../components/inputs/DateField";
+import SelectField from "../../components/inputs/SelectField";
 import Card from "../../components/card/Card";
 import { useEffect, useState } from "react";
 import { getGovernorate, SaveForm } from "../../services/apiService";
@@ -56,7 +48,6 @@ const IdentityForm = () => {
 
         setAlertType({ type: "error", msg: err?.message || "حدث خطا ما!" });
         setOpenAlert(true);
-
       });
   };
 
@@ -102,12 +93,14 @@ const IdentityForm = () => {
     if (formik.values.maritalStatus !== MaritalStatus.Married) {
       formik.setFieldValue("wivesCount", 0);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.maritalStatus]);
-  
+
   return (
     <article className="max-w-3xl mx-auto p-4">
-      <h1 className="title mb-8">استمارة هوية ذوي الشهداء</h1>
+      <div className="flex items-center border-b border-gray-900/10 pb-2 mb-6">
+        <h1 className="title">استمارة هوية ذوي الشهداء</h1>
+      </div>
 
       <div className="border-b border-gray-900/10 pb-12 mt-3">
         {/* name */}
@@ -122,11 +115,8 @@ const IdentityForm = () => {
             value={formik.values.firstName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.firstName && Boolean(formik.errors?.firstName)
-            }
-            helperText={formik.errors?.firstName}
-            className="w-full"
+            error={formik.errors?.firstName}
+            touched={formik.touched?.firstName}
           />
 
           <TextField
@@ -136,11 +126,8 @@ const IdentityForm = () => {
             value={formik.values.secondName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.secondName && Boolean(formik.errors?.secondName)
-            }
-            helperText={formik.errors?.secondName}
-            className="w-full"
+            error={formik.errors?.secondName}
+            touched={formik.touched?.secondName}
           />
 
           <TextField
@@ -150,11 +137,8 @@ const IdentityForm = () => {
             value={formik.values.thirdName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.thirdName && Boolean(formik.errors?.thirdName)
-            }
-            helperText={formik.errors?.thirdName}
-            className="w-full"
+            error={formik.errors?.thirdName}
+            touched={formik.touched?.thirdName}
           />
 
           <TextField
@@ -164,11 +148,8 @@ const IdentityForm = () => {
             value={formik.values.fourthName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.fourthName && Boolean(formik.errors?.fourthName)
-            }
-            helperText={formik.errors?.fourthName}
-            className="w-full"
+            error={formik.errors?.fourthName}
+            touched={formik.touched?.fourthName}
           />
 
           <TextField
@@ -178,39 +159,28 @@ const IdentityForm = () => {
             value={formik.values.surName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.surName && Boolean(formik.errors?.surName)}
-            helperText={formik.errors?.surName}
-            fullWidth
+            error={formik.errors?.surName}
+            touched={formik.touched?.surName}
           />
         </Card>
 
         {/* family count */}
         <Card childClassName="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="maritalStatus">الحالة الاجتماعية</InputLabel>
-            <Select
-              labelId="maritalStatus"
-              id="maritalStatus"
-              name="maritalStatus"
-              label="الحالة الاجتماعية"
-              value={formik.values.maritalStatus || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.maritalStatus &&
-                Boolean(formik.errors?.maritalStatus)
-              }
-            >
-              <MenuItem value={MaritalStatus.Single}>اعزب</MenuItem>
-              <MenuItem value={MaritalStatus.Married}>متزوج</MenuItem>
-              <MenuItem value={MaritalStatus.Divorced}>منفصل</MenuItem>
-              <MenuItem value={MaritalStatus.Widower}>ارمل</MenuItem>
-            </Select>
-
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.maritalStatus}</p>
-            </FormHelperText>
-          </FormControl>
+          <SelectField
+            id="maritalStatus"
+            name="maritalStatus"
+            label="الحالة الاجتماعية"
+            value={formik.values.maritalStatus || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.maritalStatus}
+            touched={formik.touched?.maritalStatus}
+          >
+            <MenuItem value={MaritalStatus.Single}>اعزب</MenuItem>
+            <MenuItem value={MaritalStatus.Married}>متزوج</MenuItem>
+            <MenuItem value={MaritalStatus.Divorced}>منفصل</MenuItem>
+            <MenuItem value={MaritalStatus.Widower}>ارمل</MenuItem>
+          </SelectField>
 
           {formik.values.maritalStatus === MaritalStatus.Married && (
             <TextField
@@ -221,11 +191,8 @@ const IdentityForm = () => {
               value={formik.values.wivesCount}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.wivesCount && Boolean(formik.errors?.wivesCount)
-              }
-              helperText={formik.errors?.wivesCount}
-              fullWidth
+              error={formik.errors?.wivesCount}
+              touched={formik.touched?.wivesCount}
             />
           )}
 
@@ -237,12 +204,8 @@ const IdentityForm = () => {
             value={formik.values.maleChildCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.maleChildCount &&
-              Boolean(formik.errors?.maleChildCount)
-            }
-            helperText={formik.errors?.maleChildCount}
-            fullWidth
+            error={formik.errors?.maleChildCount}
+            touched={formik.touched?.maleChildCount}
           />
 
           <TextField
@@ -253,12 +216,8 @@ const IdentityForm = () => {
             type="number"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.femaleChildCount &&
-              Boolean(formik.errors?.femaleChildCount)
-            }
-            helperText={formik.errors?.femaleChildCount}
-            fullWidth
+            error={formik.errors?.femaleChildCount}
+            touched={formik.touched?.femaleChildCount}
           />
         </Card>
 
@@ -271,60 +230,37 @@ const IdentityForm = () => {
             value={formik.values.pensionNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.pensionNumber &&
-              Boolean(formik.errors?.pensionNumber)
-            }
-            helperText={formik.errors?.pensionNumber}
-            fullWidth
+            error={formik.errors?.pensionNumber}
+            touched={formik.touched?.pensionNumber}
           />
 
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="isFatherAlive">هل الاب على قيد الحياة</InputLabel>
-            <Select
-              labelId="isFatherAlive"
-              id="isFatherAlive"
-              name="isFatherAlive"
-              label="هل الاب على قيد الحياة"
-              value={formik.values.isFatherAlive || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.isFatherAlive &&
-                Boolean(formik.errors?.isFatherAlive)
-              }
-            >
-              <MenuItem value={"true"}>نعم</MenuItem>
-              <MenuItem value={"false"}>كلا</MenuItem>
-            </Select>
+          <SelectField
+            id="isFatherAlive"
+            name="isFatherAlive"
+            label="هل الاب على قيد الحياة"
+            value={formik.values.isFatherAlive || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.isFatherAlive}
+            touched={formik?.touched?.isFatherAlive}
+          >
+            <MenuItem value={"true"}>نعم</MenuItem>
+            <MenuItem value={"false"}>كلا</MenuItem>
+          </SelectField>
 
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.isFatherAlive}</p>
-            </FormHelperText>
-          </FormControl>
-
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="isFatherAlive">هل الام على قيد الحياة</InputLabel>
-            <Select
-              labelId="isMotherAlive"
-              id="isMotherAlive"
-              name="isMotherAlive"
-              label="هل الام على قيد الحياة"
-              value={formik.values.isMotherAlive || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.isMotherAlive &&
-                Boolean(formik.errors?.isMotherAlive)
-              }
-            >
-              <MenuItem value={"true"}>نعم</MenuItem>
-              <MenuItem value={"false"}>كلا</MenuItem>
-            </Select>
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.isMotherAlive}</p>
-            </FormHelperText>
-          </FormControl>
+          <SelectField
+            id="isMotherAlive"
+            name="isMotherAlive"
+            label="هل الام على قيد الحياة"
+            value={formik.values.isMotherAlive || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.isMotherAlive}
+            touched={formik.touched?.isMotherAlive}
+          >
+            <MenuItem value={"true"}>نعم</MenuItem>
+            <MenuItem value={"false"}>كلا</MenuItem>
+          </SelectField>
         </Card>
 
         {/* beneficiary */}
@@ -339,54 +275,40 @@ const IdentityForm = () => {
             value={formik.values.beneficiaryName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.beneficiaryName &&
-              Boolean(formik.errors?.beneficiaryName)
-            }
-            helperText={formik.errors?.beneficiaryName}
-            fullWidth
+            error={formik.errors?.beneficiaryName}
+            touched={formik.touched?.beneficiaryName}
           />
 
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="relation">صلة القرابة</InputLabel>
-            <Select
-              id="relation"
-              name="relation"
-              label="صلة القرابة"
-              value={formik.values.relation || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.relation && Boolean(formik.errors?.relation)
-              }
-            >
-              <MenuItem value={MartyrRelation.Child}>ابن</MenuItem>
-              <MenuItem value={MartyrRelation.Father}>اب</MenuItem>
-              <MenuItem value={MartyrRelation.Mother}>ام</MenuItem>
-              <MenuItem value={MartyrRelation.Brother}>اخ</MenuItem>
-              <MenuItem value={MartyrRelation.Sister}>اخت</MenuItem>
-            </Select>
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.relation}</p>
-            </FormHelperText>
-          </FormControl>
+          <SelectField
+            id="relation"
+            name="relation"
+            label="صلة القرابة"
+            value={formik.values.relation || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.relation}
+            touched={formik.touched?.relation}
+          >
+            <MenuItem value={MartyrRelation.Child}>ابن</MenuItem>
+            <MenuItem value={MartyrRelation.Father}>اب</MenuItem>
+            <MenuItem value={MartyrRelation.Mother}>ام</MenuItem>
+            <MenuItem value={MartyrRelation.Brother}>اخ</MenuItem>
+            <MenuItem value={MartyrRelation.Sister}>اخت</MenuItem>
+          </SelectField>
 
           <DateField
             id="birthDate"
             name="birthDate"
             label="تاريخ الميلاد"
             value={formik.values.birthDate}
-            onChange={(value: Date | string) =>
-              formik.setFieldValue("birthDate", value)
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            setFieldValue={(value: any) => formik.setFieldValue("birthDate", value)}
             maxDate={eighteenYearsAgo}
             onBlur={formik.handleBlur}
-            touched={formik.touched.birthDate}
-            error={
-              formik.touched.birthDate && Boolean(formik.errors?.birthDate)
-            }
-            helperText={formik.errors?.birthDate}
+            error={formik.errors?.birthDate}
+            touched={formik.touched?.birthDate}
           />
+
           <TextField
             id="martyrsCount"
             name="martyrsCount"
@@ -395,12 +317,8 @@ const IdentityForm = () => {
             value={formik.values.martyrsCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.martyrsCount &&
-              Boolean(formik.errors?.martyrsCount)
-            }
-            helperText={formik.errors?.martyrsCount}
-            fullWidth
+            error={formik.errors?.martyrsCount}
+            touched={formik.touched?.martyrsCount}
           />
 
           <TextField
@@ -411,12 +329,8 @@ const IdentityForm = () => {
             value={formik.values.brothersCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.brothersCount &&
-              Boolean(formik.errors?.brothersCount)
-            }
-            helperText={formik.errors?.brothersCount}
-            fullWidth
+            error={formik.errors?.brothersCount}
+            touched={formik.touched?.brothersCount}
           />
 
           <TextField
@@ -427,12 +341,8 @@ const IdentityForm = () => {
             value={formik.values.sistersCount}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.sistersCount &&
-              Boolean(formik.errors?.sistersCount)
-            }
-            helperText={formik.errors?.sistersCount}
-            fullWidth
+            error={formik.errors?.sistersCount}
+            touched={formik.touched?.sistersCount}
           />
 
           <TextField
@@ -442,11 +352,8 @@ const IdentityForm = () => {
             value={formik.values.phoneNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.phoneNumber && Boolean(formik.errors?.phoneNumber)
-            }
-            helperText={formik.errors?.phoneNumber}
-            fullWidth
+            error={formik.errors?.phoneNumber}
+            touched={formik.touched?.phoneNumber}
             type="tel"
           />
         </Card>
@@ -456,55 +363,35 @@ const IdentityForm = () => {
           title="معلومات السكن"
           childClassName="grid grid-cols-3 md:grid-cols-4 gap-4 mb-5"
         >
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="address.governorateId">محافظة السكن</InputLabel>
-            <Select
-              labelId="address.governorateId"
-              id="address.governorateId"
-              name="address.governorateId"
-              label="محافظة السكن"
-              value={formik.values.address.governorateId || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.address?.governorateId &&
-                Boolean(formik.errors?.address?.governorateId)
-              }
-            >
-              {governorate?.data?.map((item: IOptionData) => (
-                <MenuItem value={item.id}>{item.name}</MenuItem>
-              ))}
-            </Select>
+          <SelectField
+            id="address.governorateId"
+            name="address.governorateId"
+            label="محافظة السكن"
+            value={formik.values.address.governorateId || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.address?.governorateId}
+            touched={formik.touched?.address?.governorateId}
+          >
+            {governorate?.data?.map((item: IOptionData) => (
+              <MenuItem value={item.id} key={item?.id}>{item.name}</MenuItem>
+            ))}
+          </SelectField>
 
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.address?.governorateId}</p>
-            </FormHelperText>
-          </FormControl>
-
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="address.cityId">القضاء</InputLabel>
-            <Select
-              labelId="address.cityId"
-              id="address.cityId"
-              name="address.cityId"
-              label="القضاء"
-              value={formik.values.address.cityId || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.address?.cityId &&
-                Boolean(formik.errors?.address?.cityId)
-              }
-            >
-              {cities?.data?.map((item: IOptionData) => (
-                <MenuItem value={item.id}>{item.name}</MenuItem>
-              ))}
-            </Select>
-
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.address?.cityId}</p>
-            </FormHelperText>
-          </FormControl>
+          <SelectField
+            id="address.cityId"
+            name="address.cityId"
+            label="القضاء"
+            value={formik.values.address.cityId || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.address?.cityId}
+            touched={formik.touched?.address?.cityId}
+          >
+            {cities?.data?.map((item: IOptionData) => (
+              <MenuItem value={item.id} key={item?.id}>{item.name}</MenuItem>
+            ))}
+          </SelectField>
 
           <TextField
             id="address.nearestLocation"
@@ -513,12 +400,8 @@ const IdentityForm = () => {
             value={formik.values.address.nearestLocation}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.address?.nearestLocation &&
-              Boolean(formik.errors?.address?.nearestLocation)
-            }
-            helperText={formik.errors?.address?.nearestLocation}
-            fullWidth
+            error={formik.errors?.address?.nearestLocation}
+            touched={formik.touched?.address?.nearestLocation}
           />
 
           <TextField
@@ -528,12 +411,8 @@ const IdentityForm = () => {
             value={formik.values.address.neighborhood}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.address?.neighborhood &&
-              Boolean(formik.errors?.address?.neighborhood)
-            }
-            helperText={formik.errors?.address?.neighborhood}
-            fullWidth
+            error={formik.errors?.address?.neighborhood}
+            touched={formik.touched?.address?.neighborhood}
           />
 
           <TextField
@@ -543,12 +422,8 @@ const IdentityForm = () => {
             value={formik.values.address.alley}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.address?.alley &&
-              Boolean(formik.errors?.address?.alley)
-            }
-            helperText={formik.errors?.address?.alley}
-            fullWidth
+            error={formik.errors?.address?.alley}
+            touched={formik.touched?.address?.alley}
           />
 
           <TextField
@@ -558,12 +433,8 @@ const IdentityForm = () => {
             value={formik.values.address.houseNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.address?.houseNumber &&
-              Boolean(formik.errors?.address?.houseNumber)
-            }
-            helperText={formik.errors?.address?.houseNumber}
-            fullWidth
+            error={formik.errors?.address?.houseNumber}
+            touched={formik.touched?.address?.houseNumber}
           />
         </Card>
 
@@ -572,26 +443,19 @@ const IdentityForm = () => {
           title="التحصيل الدراسي للمستفيد"
           childClassName="grid grid-cols-3 md:grid-cols-4 gap-4 mb-5"
         >
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="stage">المرحلة الدراسية</InputLabel>
-            <Select
-              labelId="stage"
-              id="stage"
-              name="stage"
-              label="المرحلة الدراسية"
-              value={formik.values?.stage ?? ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.stage && Boolean(formik.errors?.stage)}
-            >
-              <MenuItem value={1}>ماجستير</MenuItem>
-              <MenuItem value={2}>متوسطة</MenuItem>
-            </Select>
-
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.stage}</p>
-            </FormHelperText>
-          </FormControl>
+          <SelectField
+            id="stage"
+            name="stage"
+            label="المرحلة الدراسية"
+            value={formik.values?.stage ?? ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.stage}
+            touched={formik.touched?.stage}
+          >
+            <MenuItem value={1}>ماجستير</MenuItem>
+            <MenuItem value={2}>متوسطة</MenuItem>
+          </SelectField>
 
           <TextField
             id="schoolName"
@@ -600,11 +464,8 @@ const IdentityForm = () => {
             value={formik.values.schoolName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.schoolName && Boolean(formik.errors?.schoolName)
-            }
-            helperText={formik.errors?.schoolName}
-            fullWidth
+            error={formik.errors?.schoolName}
+            touched={formik.touched?.schoolName}
           />
 
           <TextField
@@ -614,35 +475,23 @@ const IdentityForm = () => {
             value={formik.values.studyType}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.studyType && Boolean(formik.errors?.studyType)
-            }
-            helperText={formik.errors?.studyType}
-            fullWidth
+            error={formik.errors?.studyType}
+            touched={formik.touched?.studyType}
           />
 
-          <FormControl fullWidth size="small" className="selectInput">
-            <InputLabel id="isStudying">هل يدرس</InputLabel>
-            <Select
-              labelId="isStudying"
-              id="isStudying"
-              name="isStudying"
-              label="هل يدرس"
-              value={formik.values.isStudying || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.isStudying && Boolean(formik.errors?.isStudying)
-              }
-            >
-              <MenuItem value={"true"}>نعم</MenuItem>
-              <MenuItem value={"false"}>لا</MenuItem>
-            </Select>
-
-            <FormHelperText component="div">
-              <p className="errMsg">{formik.errors?.isStudying}</p>
-            </FormHelperText>
-          </FormControl>
+          <SelectField
+            id="isStudying"
+            name="isStudying"
+            label="هل يدرس"
+            value={formik.values.isStudying || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors?.isStudying}
+            touched={formik.touched?.isStudying}
+          >
+            <MenuItem value={"true"}>نعم</MenuItem>
+            <MenuItem value={"false"}>لا</MenuItem>
+          </SelectField>
         </Card>
 
         <br />
@@ -671,7 +520,7 @@ const IdentityForm = () => {
       <div className="my-6 flex items-center justify-end gap-x-6">
         <Button
           onClick={() => formik.handleSubmit()}
-          color="success"
+          color="primary"
           variant="contained"
           fullWidth
           type="submit"

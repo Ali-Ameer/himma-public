@@ -67,8 +67,6 @@ export default function PersonImage({ attachmentsList, handleChange }: Props) {
     handleChange(filteredAtt);
     setAttachments({ type: AttachmentType.Photo, attachmentId: null, url: "" });
   };
-
-  console.log(attachments);
   
   return (
     <Card

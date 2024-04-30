@@ -3,10 +3,19 @@ import Navbar from "./components/navbar/Navbar";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createTheme, ThemeProvider } from "@mui/material";
-import * as locales from "@mui/material/locale";
+// import * as locales from "@mui/material/locale";
 import Footer from "./components/footer/Footer";
 
 import router from "./router";
+import stylisRTLPlugin from "stylis-plugin-rtl";
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
+import 'dayjs/locale/ar-iq'
+
+const cacheRTL = createCache({
+  key: "mui-style-rtl",
+  stylisPlugins: [stylisRTLPlugin],
+});
 
 function App() {
   const theme = createTheme(
@@ -23,30 +32,32 @@ function App() {
       palette: {
         mode: "light",
         primary: {
-          main: "#16a34a",
+          main: "#0d9488",
         },
       },
     },
-    locales["arSA"]
   );
+
   return (
-    <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"arSA"}>
-        <HashRouter>
-          <Navbar />
-          <Routes>
-            {router.map((router) => (
-              <Route
-                key={router.path}
-                path={router.path}
-                element={router.element}
-              />
-            ))}
-          </Routes>
-          <Footer />
-        </HashRouter>
-      </LocalizationProvider>
-    </ThemeProvider>
+    <CacheProvider value={cacheRTL}>
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ar-iq"}>
+          <HashRouter>
+            <Navbar />
+            <Routes>
+              {router.map((router) => (
+                <Route
+                  key={router.path}
+                  path={router.path}
+                  element={router.element}
+                />
+              ))}
+            </Routes>
+            <Footer />
+          </HashRouter>
+        </LocalizationProvider>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
 
