@@ -33,7 +33,6 @@ p {
   text-align: right;
 }
 
-
 .datePicker input {
   padding: 8.5px 14px;
 }
@@ -41,4 +40,9 @@ p {
 .MuiStack-root.mui-style-rtl-5rcoci-MuiStack-root {
   width: 100%;
   min-width: 100%;
+}
+
+.MuiStack-root,
+.mui-style-rtl-56zlvt {
+  width: 100%;
 }

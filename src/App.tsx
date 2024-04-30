@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -42,7 +42,7 @@ function App() {
     <CacheProvider value={cacheRTL}>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ar-iq"}>
-          <HashRouter>
+          <BrowserRouter>
             <Navbar />
             <Routes>
               {router.map((router) => (
@@ -54,7 +54,7 @@ function App() {
               ))}
             </Routes>
             <Footer />
-          </HashRouter>
+          </BrowserRouter>
         </LocalizationProvider>
       </ThemeProvider>
     </CacheProvider>

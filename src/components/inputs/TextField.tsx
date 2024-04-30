@@ -18,7 +18,6 @@ const TextField = (props: IInputProps) => {
             <p className="errMsg">{props.error}</p>
           ) : null
         }
-        // helperText={props.error ? props.helperText : null}
         size={"small"}
         type={props.type ? props.type : "text"}
         fullWidth
