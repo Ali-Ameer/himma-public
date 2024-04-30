@@ -58,6 +58,7 @@ const attachmentCards = {
     attachmentId: null,
   },
 };
+
 const AttachmentUploader = ({
   attachmentsList,
   pensionNumber,

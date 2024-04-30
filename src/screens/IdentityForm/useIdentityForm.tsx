@@ -9,6 +9,9 @@ const eighteenYearsAgo = new Date(
 );
 
 export default function useIdentityForm() {
+  const [isError, setIsError] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
   const [openAlert, setOpenAlert] = useState(false);
   const [alertType, setAlertType] = useState<{
     type: "success" | "error";
@@ -223,10 +226,14 @@ export default function useIdentityForm() {
     initialValues,
     validationSchema,
     eighteenYearsAgo,
+    isError,
+    setIsError,
+    openModal,
+    setOpenModal,
     openAlert,
     setOpenAlert,
     alertType,
     setAlertType,
-    handleAlertClose
+    handleAlertClose,
   };
 }

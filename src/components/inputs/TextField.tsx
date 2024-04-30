@@ -20,13 +20,9 @@ const TextField = (props: IInputProps) => {
         }
         // helperText={props.error ? props.helperText : null}
         size={"small"}
+        type={props.type ? props.type : "text"}
         fullWidth
       />
-      {/* {props.touched && props.error && (
-        <FormHelperText className="px-0 pt-1">
-          <p className="errMsg">{props.error}</p>
-        </FormHelperText>
-      )} */}
     </>
   );
 };

@@ -1,4 +1,13 @@
-import { Alert, Button, MenuItem, Snackbar } from "@mui/material";
+import {
+  Alert,
+  Backdrop,
+  Box,
+  Fade,
+  MenuItem,
+  Modal,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import { useFormik } from "formik";
 
 import {
@@ -17,12 +26,38 @@ import { useEffect, useState } from "react";
 import { getGovernorate, SaveForm } from "../../services/apiService";
 import PersonImage from "./PersonImage";
 import useIdentityForm from "./useIdentityForm";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import Button from "../../components/button/Button";
+
+const style = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
+  alignItems: "center",
+  justifyContent: "center",
+  position: "absolute",
+  top: "40%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  maxWidth: 420,
+  width: "90%",
+  bgcolor: "white",
+  borderRadius: "6px",
+  border: "none",
+  boxShadow: 24,
+  p: 4,
+  outline: "none",
+};
 
 const IdentityForm = () => {
   const {
     initialValues,
     validationSchema,
     eighteenYearsAgo,
+    isError,
+    setIsError,
+    openModal,
+    setOpenModal,
     openAlert,
     setOpenAlert,
     alertType,
@@ -34,12 +69,17 @@ const IdentityForm = () => {
   const [cities, setCities] = useState<ISelectData>();
 
   const handleSubmit = async (values: IdentityFormValues) => {
+    setIsError(false);
+    setOpenAlert(false);
+    setOpenModal(false);
+
     await SaveForm(values)
       .then((res) => {
         console.log("result", res);
 
-        setOpenAlert(true);
         setAlertType({ type: "success", msg: "تم تقديم الاستمارة بنجاح" });
+        setOpenAlert(true);
+        setOpenModal(true);
 
         // formik.resetForm();
       })
@@ -48,6 +88,7 @@ const IdentityForm = () => {
 
         setAlertType({ type: "error", msg: err?.message || "حدث خطا ما!" });
         setOpenAlert(true);
+        setIsError(true);
       });
   };
 
@@ -102,171 +143,173 @@ const IdentityForm = () => {
         <h1 className="title">استمارة هوية ذوي الشهداء</h1>
       </div>
 
-      <div className="border-b border-gray-900/10 pb-12 mt-3">
-        {/* name */}
-        <Card
-          title="المعلومات الشخصية"
-          childClassName="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-5"
-        >
-          <TextField
-            id="firstName"
-            name="firstName"
-            label="الاسم الأول"
-            value={formik.values.firstName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.firstName}
-            touched={formik.touched?.firstName}
-          />
-
-          <TextField
-            id="secondName"
-            name="secondName"
-            label="الاسم الثاني"
-            value={formik.values.secondName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.secondName}
-            touched={formik.touched?.secondName}
-          />
-
-          <TextField
-            id="thirdName"
-            name="thirdName"
-            label="الاسم الثالث"
-            value={formik.values.thirdName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.thirdName}
-            touched={formik.touched?.thirdName}
-          />
-
-          <TextField
-            id="fourthName"
-            name="fourthName"
-            label="الاسم الرابع"
-            value={formik.values.fourthName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.fourthName}
-            touched={formik.touched?.fourthName}
-          />
-
-          <TextField
-            id="surName"
-            name="surName"
-            label="اللقب"
-            value={formik.values.surName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.surName}
-            touched={formik.touched?.surName}
-          />
-        </Card>
-
-        {/* family count */}
-        <Card childClassName="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
-          <SelectField
-            id="maritalStatus"
-            name="maritalStatus"
-            label="الحالة الاجتماعية"
-            value={formik.values.maritalStatus || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.maritalStatus}
-            touched={formik.touched?.maritalStatus}
+      <div className="flex flex-col gap-6 border-b border-gray-900/10 mt-3">
+        {/* name, family, pension Number and parent */}
+        <div className="grid gap-4">
+          <Card
+            title="المعلومات الشخصية"
+            childClassName="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4"
           >
-            <MenuItem value={MaritalStatus.Single}>اعزب</MenuItem>
-            <MenuItem value={MaritalStatus.Married}>متزوج</MenuItem>
-            <MenuItem value={MaritalStatus.Divorced}>منفصل</MenuItem>
-            <MenuItem value={MaritalStatus.Widower}>ارمل</MenuItem>
-          </SelectField>
-
-          {formik.values.maritalStatus === MaritalStatus.Married && (
             <TextField
-              id="wivesCount"
-              name="wivesCount"
-              label="عدد الزوجات"
-              type="number"
-              value={formik.values.wivesCount}
+              id="firstName"
+              name="firstName"
+              label="الاسم الأول"
+              value={formik.values.firstName}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.errors?.wivesCount}
-              touched={formik.touched?.wivesCount}
+              error={formik.errors?.firstName}
+              touched={formik.touched?.firstName}
             />
-          )}
 
-          <TextField
-            id="maleChildCount"
-            name="maleChildCount"
-            label="عدد الأبناء الذكور"
-            type="number"
-            value={formik.values.maleChildCount}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.maleChildCount}
-            touched={formik.touched?.maleChildCount}
-          />
+            <TextField
+              id="secondName"
+              name="secondName"
+              label="الاسم الثاني"
+              value={formik.values.secondName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.secondName}
+              touched={formik.touched?.secondName}
+            />
 
-          <TextField
-            id="femaleChildCount"
-            name="femaleChildCount"
-            label="عدد الأبناء الإناث"
-            value={formik.values.femaleChildCount}
-            type="number"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.femaleChildCount}
-            touched={formik.touched?.femaleChildCount}
-          />
-        </Card>
+            <TextField
+              id="thirdName"
+              name="thirdName"
+              label="الاسم الثالث"
+              value={formik.values.thirdName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.thirdName}
+              touched={formik.touched?.thirdName}
+            />
 
-        {/* pension Number and parent */}
-        <Card childClassName="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
-          <TextField
-            id="pensionNumber"
-            name="pensionNumber"
-            label="الرقم التقاعدي"
-            value={formik.values.pensionNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.pensionNumber}
-            touched={formik.touched?.pensionNumber}
-          />
+            <TextField
+              id="fourthName"
+              name="fourthName"
+              label="الاسم الرابع"
+              value={formik.values.fourthName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.fourthName}
+              touched={formik.touched?.fourthName}
+            />
 
-          <SelectField
-            id="isFatherAlive"
-            name="isFatherAlive"
-            label="هل الاب على قيد الحياة"
-            value={formik.values.isFatherAlive || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.isFatherAlive}
-            touched={formik?.touched?.isFatherAlive}
-          >
-            <MenuItem value={"true"}>نعم</MenuItem>
-            <MenuItem value={"false"}>كلا</MenuItem>
-          </SelectField>
+            <TextField
+              id="surName"
+              name="surName"
+              label="اللقب"
+              value={formik.values.surName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.surName}
+              touched={formik.touched?.surName}
+            />
+          </Card>
 
-          <SelectField
-            id="isMotherAlive"
-            name="isMotherAlive"
-            label="هل الام على قيد الحياة"
-            value={formik.values.isMotherAlive || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors?.isMotherAlive}
-            touched={formik.touched?.isMotherAlive}
-          >
-            <MenuItem value={"true"}>نعم</MenuItem>
-            <MenuItem value={"false"}>كلا</MenuItem>
-          </SelectField>
-        </Card>
+          {/* family count */}
+          <Card childClassName="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <SelectField
+              id="maritalStatus"
+              name="maritalStatus"
+              label="الحالة الاجتماعية"
+              value={formik.values.maritalStatus || ""}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.maritalStatus}
+              touched={formik.touched?.maritalStatus}
+            >
+              <MenuItem value={MaritalStatus.Single}>اعزب</MenuItem>
+              <MenuItem value={MaritalStatus.Married}>متزوج</MenuItem>
+              <MenuItem value={MaritalStatus.Divorced}>منفصل</MenuItem>
+              <MenuItem value={MaritalStatus.Widower}>ارمل</MenuItem>
+            </SelectField>
+
+            {formik.values.maritalStatus === MaritalStatus.Married && (
+              <TextField
+                id="wivesCount"
+                name="wivesCount"
+                label="عدد الزوجات"
+                type="number"
+                value={formik.values.wivesCount}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.errors?.wivesCount}
+                touched={formik.touched?.wivesCount}
+              />
+            )}
+
+            <TextField
+              id="maleChildCount"
+              name="maleChildCount"
+              label="عدد الأبناء الذكور"
+              type="number"
+              value={formik.values.maleChildCount}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.maleChildCount}
+              touched={formik.touched?.maleChildCount}
+            />
+
+            <TextField
+              id="femaleChildCount"
+              name="femaleChildCount"
+              label="عدد الأبناء الإناث"
+              value={formik.values.femaleChildCount}
+              type="number"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.femaleChildCount}
+              touched={formik.touched?.femaleChildCount}
+            />
+          </Card>
+
+          {/* pension Number and parent */}
+          <Card childClassName="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <TextField
+              id="pensionNumber"
+              name="pensionNumber"
+              label="الرقم التقاعدي"
+              value={formik.values.pensionNumber}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.pensionNumber}
+              touched={formik.touched?.pensionNumber}
+            />
+
+            <SelectField
+              id="isFatherAlive"
+              name="isFatherAlive"
+              label="هل الاب على قيد الحياة"
+              value={formik.values.isFatherAlive || ""}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.isFatherAlive}
+              touched={formik?.touched?.isFatherAlive}
+            >
+              <MenuItem value={"true"}>نعم</MenuItem>
+              <MenuItem value={"false"}>كلا</MenuItem>
+            </SelectField>
+
+            <SelectField
+              id="isMotherAlive"
+              name="isMotherAlive"
+              label="هل الام على قيد الحياة"
+              value={formik.values.isMotherAlive || ""}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors?.isMotherAlive}
+              touched={formik.touched?.isMotherAlive}
+            >
+              <MenuItem value={"true"}>نعم</MenuItem>
+              <MenuItem value={"false"}>كلا</MenuItem>
+            </SelectField>
+          </Card>
+        </div>
 
         {/* beneficiary */}
         <Card
           title="معلومات المستفيد"
-          childClassName="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 items-baseline gap-4 mb-5 "
+          childClassName="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 items-baseline gap-4 "
         >
           <TextField
             id="beneficiaryName"
@@ -302,7 +345,9 @@ const IdentityForm = () => {
             label="تاريخ الميلاد"
             value={formik.values.birthDate}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setFieldValue={(value: any) => formik.setFieldValue("birthDate", value)}
+            setFieldValue={(value: any) =>
+              formik.setFieldValue("birthDate", value)
+            }
             maxDate={eighteenYearsAgo}
             onBlur={formik.handleBlur}
             error={formik.errors?.birthDate}
@@ -361,7 +406,7 @@ const IdentityForm = () => {
         {/* address */}
         <Card
           title="معلومات السكن"
-          childClassName="grid grid-cols-3 md:grid-cols-4 gap-4 mb-5"
+          childClassName="grid grid-cols-3 md:grid-cols-4 gap-4"
         >
           <SelectField
             id="address.governorateId"
@@ -374,7 +419,9 @@ const IdentityForm = () => {
             touched={formik.touched?.address?.governorateId}
           >
             {governorate?.data?.map((item: IOptionData) => (
-              <MenuItem value={item.id} key={item?.id}>{item.name}</MenuItem>
+              <MenuItem value={item.id} key={item?.id}>
+                {item.name}
+              </MenuItem>
             ))}
           </SelectField>
 
@@ -389,7 +436,9 @@ const IdentityForm = () => {
             touched={formik.touched?.address?.cityId}
           >
             {cities?.data?.map((item: IOptionData) => (
-              <MenuItem value={item.id} key={item?.id}>{item.name}</MenuItem>
+              <MenuItem value={item.id} key={item?.id}>
+                {item.name}
+              </MenuItem>
             ))}
           </SelectField>
 
@@ -441,7 +490,7 @@ const IdentityForm = () => {
         {/* study */}
         <Card
           title="التحصيل الدراسي للمستفيد"
-          childClassName="grid grid-cols-3 md:grid-cols-4 gap-4 mb-5"
+          childClassName="grid grid-cols-3 md:grid-cols-4 gap-4"
         >
           <SelectField
             id="stage"
@@ -515,22 +564,34 @@ const IdentityForm = () => {
             <p className="errMsg">{String(formik?.errors?.attachments)}</p>
           )}
         </Card>
+
+        {/* error message */}
+        {(isError || alertType.type === "error") && (
+          <Typography
+            component="p"
+            color="error"
+            sx={{ fontSize: "16px" }}
+            className="pt-5 pb-2"
+          >
+            {alertType.type === "error"
+              ? alertType.msg
+              : "حدث خطا ما, يرجى المحاولة لاحقا!"}
+          </Typography>
+        )}
       </div>
 
+      {/* cta */}
       <div className="my-6 flex items-center justify-end gap-x-6">
         <Button
-          onClick={() => formik.handleSubmit()}
+          name="إرسال"
           color="primary"
-          variant="contained"
-          fullWidth
+          onClick={formik.handleSubmit}
+          className="px-8"
           type="submit"
-          className="mt-4"
-          sx={{ width: "fit-content", paddingX: 4 }}
-        >
-          إرسال
-        </Button>
+        />
       </div>
 
+      {/* pop up modals */}
       <Snackbar
         open={openAlert}
         autoHideDuration={4000}
@@ -546,6 +607,47 @@ const IdentityForm = () => {
           {alertType.msg}
         </Alert>
       </Snackbar>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={openModal}>
+          <Box sx={style}>
+            <CheckCircleIcon color="green" className="w-32 h-32 mb-2" />
+
+            <Typography variant="h5" component="h2">
+              تم استلام الطلب بنجاح
+            </Typography>
+
+            <Typography
+              id="transition-modal-description"
+              sx={{ textAlign: "center" }}
+            >
+              تم تقديم الاستمارة بنجاح، سيتم مراجعة الاستمارة والتحقق من
+              المعلومات وإبلاغك بأقرب وقت ممكن.
+            </Typography>
+
+            <Box sx={{ mt: 2, justifyContent: "center" }}>
+              <Button
+                name="اغلاق"
+                color="primary"
+                onClick={() => setOpenModal(false)}
+                className="px-8"
+              />
+            </Box>
+          </Box>
+        </Fade>
+      </Modal>
     </article>
   );
 };
