@@ -23,7 +23,7 @@ import DateField from "../../components/inputs/DateField";
 import SelectField from "../../components/inputs/SelectField";
 import Card from "../../components/card/Card";
 import { useEffect, useState } from "react";
-import { getGovernorate, SaveForm } from "../../services/apiService";
+import { getCities, getGovernorate, SaveForm } from "../../services/apiService";
 import PersonImage from "./PersonImage";
 import useIdentityForm from "./useIdentityForm";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
@@ -115,9 +115,9 @@ const IdentityForm = () => {
 
   // get cites data when governorate is change
   useEffect(() => {
-    if (formik.values.address.governorateId !== null) {
+    if (formik.values?.address?.governorateId !== null) {
       const getData = async () => {
-        await getGovernorate()
+        await getCities(formik.values.address.governorateId!)
           .then((data) => {
             setCities(data);
           })
@@ -531,7 +531,7 @@ const IdentityForm = () => {
           <SelectField
             id="isStudying"
             name="isStudying"
-            label="هل يدرس"
+            label="مستمر في الدراسة؟"
             value={formik.values.isStudying || ""}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
