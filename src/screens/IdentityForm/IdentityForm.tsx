@@ -66,7 +66,7 @@ const IdentityForm = () => {
   } = useIdentityForm();
 
   const [governorate, setGovernorate] = useState<ISelectData>();
-  const [cities, setCities] = useState<ISelectData>();
+  const [cities, setCities] = useState<IOptionData[]>();
 
   const handleSubmit = async (values: IdentityFormValues) => {
     setIsError(false);
@@ -119,7 +119,9 @@ const IdentityForm = () => {
       const getData = async () => {
         await getCities(formik.values.address.governorateId!)
           .then((data) => {
-            setCities(data);
+            console.log("data ", data);
+
+            setCities(data?.data?.cities || []);
           })
           .catch((error) => {
             console.log(error);
@@ -435,7 +437,7 @@ const IdentityForm = () => {
             error={formik.errors?.address?.cityId}
             touched={formik.touched?.address?.cityId}
           >
-            {cities?.data?.map((item: IOptionData) => (
+            {cities?.map((item: IOptionData) => (
               <MenuItem value={item.id} key={item?.id}>
                 {item.name}
               </MenuItem>
@@ -492,19 +494,16 @@ const IdentityForm = () => {
           title="التحصيل الدراسي للمستفيد"
           childClassName="grid grid-cols-3 md:grid-cols-4 gap-4"
         >
-          <SelectField
+          <TextField
             id="stage"
             name="stage"
             label="المرحلة الدراسية"
-            value={formik.values?.stage ?? ""}
+            value={formik.values.stage}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors?.stage}
             touched={formik.touched?.stage}
-          >
-            <MenuItem value={1}>ماجستير</MenuItem>
-            <MenuItem value={2}>متوسطة</MenuItem>
-          </SelectField>
+          />
 
           <TextField
             id="schoolName"

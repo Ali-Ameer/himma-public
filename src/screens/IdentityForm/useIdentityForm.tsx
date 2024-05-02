@@ -54,37 +54,11 @@ export default function useIdentityForm() {
       houseNumber: "",
       nearestLocation: "",
     },
-    stage: null,
+    stage: "",
     schoolName: "",
     studyType: "",
     isStudying: null,
-    attachments: [
-      {
-        type: 3,
-        attachmentId: 51,
-        url: "blob:http://localhost:5173/b12a24d6-9bf8-43bc-9c77-c991541dcfd8",
-      },
-      {
-        type: 1,
-        attachmentId: 52,
-        url: "/MartyrIdForm/f8c6e84b-a78f-47e7-9dd9-99e29128eef7.jpg",
-      },
-      {
-        type: 2,
-        attachmentId: 53,
-        url: "/MartyrIdForm/b1153172-5de3-4e25-aa90-6a49ad9007d8.jpg",
-      },
-      {
-        type: 4,
-        attachmentId: 54,
-        url: "/MartyrIdForm/fce9bf56-13ba-4636-b1dc-b6f2a710e333.jpg",
-      },
-      {
-        type: 5,
-        attachmentId: 55,
-        url: "/MartyrIdForm/4ffe46c2-b5b7-4b03-85a0-6383400fa6e4.jpg",
-      },
-    ], // [],
+    attachments: [],
   };
 
   const validationSchema = yup.object({

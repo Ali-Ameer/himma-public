@@ -79,7 +79,7 @@ export interface IdentityFormValues {
     sistersCount: number | undefined;
     phoneNumber: string;
     address: Address;
-    stage: number | null;
+    stage: string;
     schoolName: string;
     studyType: string;
     isStudying: boolean | null;
@@ -90,11 +90,28 @@ export interface IdentityFormValues {
 export interface IOptionData {
     id: number;
     name: string;
-    cities: null | []
 }
 
 export interface ISelectData {
     data: IOptionData[]
+    error: boolean,
+    message: string | null,
+    details: string | null,
+    totalCount: number
+}
+
+// cities
+export interface ICitiesOptionData {
+    name: string;
+    id: number;
+    cities: {
+        name: string,
+        id: number
+    }[]
+}
+
+export interface ICitiesSelectData {
+    data: ICitiesOptionData
 
     error: boolean,
     message: string | null,

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { IdentityFormValues, ISelectData } from "../models/IdentityForm";
+import { ICitiesSelectData, IdentityFormValues, ISelectData } from "../models/IdentityForm";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -21,13 +21,13 @@ export async function getGovernorate(): Promise<ISelectData> {
 }
 
 // get cites data from api
-export async function getCities(governorateId: number): Promise<ISelectData> {
+export async function getCities(governorateId: number): Promise<ICitiesSelectData> {
   try {
-    const response = await axios.get<ISelectData>(`${baseURL}/Governorates/${governorateId}`);
-    return response.data;
+    const response = await axios.get<ICitiesSelectData>(`${baseURL}/Governorates/${governorateId}`);
+    return response.data
   } catch (error) {
     // Handle error
-    return { error: true } as ISelectData
+    return { error: true } as ICitiesSelectData
   }
 }
 
@@ -89,13 +89,13 @@ export const SaveForm = async (payload: IdentityFormValues) => {
     // The request was made and the server responded with a status code
     if (error.response.data && error.response.data?.responseErrors?.length) {
       errorMessage = error.response.data?.responseErrors?.map((error: any) => error?.detailMessage)
-      
+
       console.log("err list ", error.response.data?.responseErrors?.map((error: any) => error?.detailMessage));
     } else {
       errorMessage = [`حدق خطا ما!: ${error.response.status}`];
     }
     console.error("حدث خطا ما في تقديم الاستمارة!", errorMessage);
-    throw new Error(errorMessage.join("\n ,")); 
+    throw new Error(errorMessage.join("\n ,"));
   }
 
 }
