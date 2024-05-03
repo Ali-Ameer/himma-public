@@ -177,7 +177,7 @@ export default function useIdentityForm() {
           .typeError("ادخل قيمة صحيحة"),
       })
       .typeError("ادخل قيمة صحيحة"),
-    stage: yup.number().required("المرحلة مطلوبة").typeError("ادخل قيمة صحيحة"),
+    stage: yup.string().required("المرحلة مطلوبة").typeError("ادخل قيمة صحيحة"),
     schoolName: yup
       .string()
       .required("اسم المدرسة مطلوب")
