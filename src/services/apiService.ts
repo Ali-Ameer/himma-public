@@ -2,7 +2,7 @@
 import axios from "axios";
 import { ICitiesSelectData, IdentityFormValues, ISelectData } from "../models/IdentityForm";
 
-const baseURL = `/api`;
+// const baseURL = `/api/`;
 
 axios.interceptors.request.use(config => {
   config.headers['Accept-Language'] = 'ar';
@@ -12,7 +12,7 @@ axios.interceptors.request.use(config => {
 // get governorates data from api
 export async function getGovernorate(): Promise<ISelectData> {
   try {
-    const response = await axios.get<ISelectData>(`${baseURL}/Governorates`);
+    const response = await axios.get<ISelectData>(`/api/Governorates`);
     return response.data;
   } catch (error) {
     // Handle error
@@ -23,7 +23,7 @@ export async function getGovernorate(): Promise<ISelectData> {
 // get cites data from api
 export async function getCities(governorateId: number): Promise<ICitiesSelectData> {
   try {
-    const response = await axios.get<ICitiesSelectData>(`${baseURL}/Governorates/${governorateId}`);
+    const response = await axios.get<ICitiesSelectData>(`/api/Governorates/${governorateId}`);
     return response.data
   } catch (error) {
     // Handle error
@@ -37,7 +37,7 @@ export const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await axios.post(`${baseURL}/MartyrIdForms/Attachment`, formData, {
+    const response = await axios.post(`/api/MartyrIdForms/Attachment`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -81,7 +81,7 @@ export const uploadFile = async (file: File) => {
 // form post
 export const SaveForm = async (payload: IdentityFormValues) => {
   try {
-    const response = await axios.post(`${baseURL}/MartyrIdForms`, payload);
+    const response = await axios.post(`/api/MartyrIdForms`, payload);
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
