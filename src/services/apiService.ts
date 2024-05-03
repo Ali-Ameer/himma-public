@@ -2,7 +2,7 @@
 import axios from "axios";
 import { ICitiesSelectData, IdentityFormValues, ISelectData } from "../models/IdentityForm";
 
-const baseURL = "/api/";
+const baseURL = `/api/`;
 
 axios.interceptors.request.use(config => {
   config.headers['Accept-Language'] = 'ar';
