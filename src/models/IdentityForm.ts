@@ -42,6 +42,15 @@ export enum MartyrRelation {
     Sister = 5
 }
 
+export enum IStageLevel {
+    level1 = 1,
+    level2 = 2,
+    level3 = 3,
+    level4 = 4,
+    level5 = 5,
+    level6 = 6,
+}
+
 export interface Address {
     governorateId: number | null;
     cityId: number | null;

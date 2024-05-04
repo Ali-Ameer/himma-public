@@ -14,6 +14,7 @@ import {
   IdentityFormValues,
   IOptionData,
   ISelectData,
+  IStageLevel,
   MaritalStatus,
   MartyrRelation,
 } from "../../models/IdentityForm";
@@ -494,7 +495,8 @@ const IdentityForm = () => {
           title="التحصيل الدراسي للمستفيد"
           childClassName="grid grid-cols-3 md:grid-cols-4 gap-4"
         >
-          <TextField
+
+          <SelectField
             id="stage"
             name="stage"
             label="المرحلة الدراسية"
@@ -503,7 +505,14 @@ const IdentityForm = () => {
             onBlur={formik.handleBlur}
             error={formik.errors?.stage}
             touched={formik.touched?.stage}
-          />
+          >
+            <MenuItem value={IStageLevel.level1}>إبتدائية</MenuItem>
+            <MenuItem value={IStageLevel.level2}>متوسطة</MenuItem>
+            <MenuItem value={IStageLevel.level3}>اعدادية</MenuItem>
+            <MenuItem value={IStageLevel.level4}>دبلوم</MenuItem>
+            <MenuItem value={IStageLevel.level5}>بكالوريوس</MenuItem>
+            <MenuItem value={IStageLevel.level6}>ماجستير</MenuItem>
+          </SelectField>
 
           <TextField
             id="schoolName"
