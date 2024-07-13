@@ -98,8 +98,7 @@ const IdentityForm = () => {
     validationSchema,
     onSubmit: (values) => handleSubmit(values),
   });
-
-  // get data when is loading
+  
   useEffect(() => {
     const getData = async () => {
       await getGovernorate()
